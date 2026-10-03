@@ -2,4 +2,5 @@
 .agents/
 .claude/rules/
 .claude/settings.local.json
+.mise.local.toml
 .DS_Store

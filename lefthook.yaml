@@ -1,0 +1,8 @@
+pre-commit:
+  parallel: true
+  commands:
+    gitleaks:
+      run: gitleaks protect --staged --verbose
+    actionlint:
+      glob: ".github/workflows/*.y{a,}ml"
+      run: actionlint {staged_files}

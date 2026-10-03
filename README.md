@@ -56,6 +56,12 @@ shellHook = ... + rulesLib.mkShellHook { inherit pkgs; bundle = rulesBundle; tar
 
 開発環境は Nix で管理していない。検証は `nix flake check` だけで、[examples/rules/](examples/rules/) からバンドルが組めることを CI で確認する。
 
+pre-commit で gitleaks（シークレット走査）と actionlint（workflow の検査）を回す。ツールは [mise](https://mise.jdx.dev/) で入れる。
+
+```bash
+mise install && lefthook install
+```
+
 `flake.lock` は毎週土曜に [update-locks](.github/workflows/update-locks.yaml) が PR を作って auto-merge する（[adr/agent-rules-nix/0001](adr/agent-rules-nix/0001-run-update-locks-in-this-repo.md)）。元の設計メモは [plan.md](plan.md)。
 
 ## スコープ外
