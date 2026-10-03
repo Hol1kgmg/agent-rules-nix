@@ -1,0 +1,21 @@
+name: dependabot-auto-merge
+
+on:
+  pull_request:
+
+# auto-merge の有効化だけ行う。実際のマージはブランチ保護 (必須チェック check) が通ってから GitHub が行う
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  enable:
+    if: github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      # 対象は github-actions の SHA pin 更新のみ (dependabot.yml)。
+      # major も含める: 動作確認は ci.yaml の nix flake check に委ねる
+      - env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ github.event.pull_request.html_url }}
+        run: gh pr merge --squash --auto "$PR"

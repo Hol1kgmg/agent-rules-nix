@@ -62,7 +62,7 @@ pre-commit で gitleaks（シークレット走査）と actionlint（workflow �
 mise install && lefthook install
 ```
 
-`flake.lock` は毎週土曜に [update-locks](.github/workflows/update-locks.yaml) が PR を作って auto-merge する（[adr/agent-rules-nix/0001](adr/agent-rules-nix/0001-run-update-locks-in-this-repo.md)）。元の設計メモは [plan.md](plan.md)。
+`flake.lock` は毎週土曜に [update-locks](.github/workflows/update-locks.yaml) が PR を作って auto-merge する（[adr/agent-rules-nix/0001](adr/agent-rules-nix/0001-run-update-locks-in-this-repo.md)）。元の設計メモは [plan.md](plan.md)。workflow の action 更新は dependabot が PR を作り、[dependabot-auto-merge](.github/workflows/dependabot-auto-merge.yaml) が auto-merge を有効化する。
 
 ## スコープ外
 
