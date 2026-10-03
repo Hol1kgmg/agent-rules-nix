@@ -14,6 +14,10 @@ skills-list:
 skills-update:
     nix run .#skills-sources-lock
 
+# Install example rules into .claude/rules
+rules:
+    nix run .#rules-install-local
+
 # Update all locks, then check
 update:
     nix flake update

@@ -27,14 +27,29 @@
       localTargets = {
         agents = agentLib.defaultLocalTargets.agents // { enable = true; };
       };
+
+      # このリポジトリが提供するライブラリ。examples/rules で自分自身に dogfood する。
+      rulesLib = import ./lib { lib = nixpkgs.lib; skillsLib = agentLib; };
+      ruleCatalog = rulesLib.discoverCatalog { local = { path = ./examples/rules; }; };
+      ruleSelection = rulesLib.selectRules { catalog = ruleCatalog; allowlist = [ "sample" ]; };
+      ruleTargets = { claude = rulesLib.defaultLocalTargets.claude // { enable = true; }; };
     in
-    flake-utils.lib.eachDefaultSystem (system:
+    {
+      lib.agent-rules = rulesLib;
+    } // flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
         bundle = agentLib.mkBundle { inherit pkgs selection; };
+        rulesBundle = rulesLib.mkBundle { inherit pkgs; selection = ruleSelection; };
       in {
         # skills.nix の宣言が解決できてバンドルが組めるかの確認（nix flake check）
         checks.skills = bundle;
+        checks.rules-example = rulesBundle;
+
+        apps.rules-install-local = {
+          type = "app";
+          program = "${rulesLib.mkLocalInstallProgram { inherit pkgs; bundle = rulesBundle; targets = ruleTargets; }}/bin/rules-install-local";
+        };
 
         # sources から見つかった全スキル ID の一覧（skills.nix の候補）
         apps.skills-list = {
@@ -70,6 +85,11 @@
           '' + agentLib.mkShellHook {
             inherit pkgs bundle;
             targets = localTargets;
+            quiet = true;
+          } + rulesLib.mkShellHook {
+            inherit pkgs;
+            bundle = rulesBundle;
+            targets = ruleTargets;
             quiet = true;
           };
         };

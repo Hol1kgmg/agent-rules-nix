@@ -10,9 +10,9 @@ permissions: {}
 
 jobs:
   update:
-    # テンプレート生成で派生リポジトリにも降るが、そこでは lockfile を手動更新する（just update）。
-    # 削除や同期対象外の仕組みを持たせず、このガード1行で止める
-    if: github.repository == 'Hol1kgmg/claude-temp'
+    # ライブラリとして agent-skills-nix の API 変更に追従するため、このリポジトリでも動かす
+    # （adr/agent-rules-nix/0001）。App のインストールと Secrets は docs/lockfile-automation.md の手順
+    if: github.repository == 'Hol1kgmg/agent-rules-nix'
     runs-on: ubuntu-latest
     steps:
       # App トークンで PR を作ると ci.yaml が起動する。
