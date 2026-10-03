@@ -1,8 +1,0 @@
-{
-  "schemaVersion": 1,
-  "managedBy": "agent-skills-nix",
-  "mode": "local",
-  "bundle": "/nix/store/d05fqjdsm7s2r0wg4z4khcv1aawzxpgi-agent-rules-bundle",
-  "target": "claude",
-  "structure": "copy-tree"
-}

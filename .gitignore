@@ -1,2 +1,5 @@
+.direnv/
+.agents/
+.claude/rules/
 .claude/settings.local.json
 .DS_Store
