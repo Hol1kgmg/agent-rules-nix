@@ -1,4 +1,0 @@
-pre-commit:
-  commands:
-    gitleaks:
-      run: gitleaks protect --staged --verbose

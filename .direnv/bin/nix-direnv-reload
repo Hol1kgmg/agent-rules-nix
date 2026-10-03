@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -e
+if [[ ! -d "/Users/mypc/dev/github.com/Hol1kgmg/agent-rules-nix" ]]; then
+  echo "Cannot find source directory; Did you move it?"
+  echo "(Looking for "/Users/mypc/dev/github.com/Hol1kgmg/agent-rules-nix")"
+  echo 'Cannot force reload with this script - use "direnv reload" manually and then try again'
+  exit 1
+fi
+
+# rebuild the cache forcefully
+_nix_direnv_force_reload=1 direnv exec "/Users/mypc/dev/github.com/Hol1kgmg/agent-rules-nix" true

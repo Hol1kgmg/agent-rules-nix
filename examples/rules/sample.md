@@ -5,4 +5,4 @@ paths:
 
 # sample
 
-agent-rules-nix の動作確認用ルール。`nix run .#rules-install-local` で `.claude/rules/sample.md` に配置される。
+agent-rules-nix の動作確認用ルール。`nix flake check` でバンドルに `sample.md` として並ぶ。

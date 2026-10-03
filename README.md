@@ -54,14 +54,7 @@ shellHook = ... + rulesLib.mkShellHook { inherit pkgs; bundle = rulesBundle; tar
 
 ## このリポジトリでの開発
 
-[Nix](https://nixos.org/)（Flakes 有効）と [direnv](https://direnv.net/) を前提に `direnv allow` で devShell に入る。
-[examples/rules/](examples/rules/) を自分自身の `.claude/rules` に同期して動作確認している。
-
-```bash
-nix flake check   # examples/rules からバンドルが組めるか
-just rules        # examples/rules を .claude/rules に同期
-just update       # flake.lock を更新して検証
-```
+開発環境は Nix で管理していない。検証は `nix flake check` だけで、[examples/rules/](examples/rules/) からバンドルが組めることを CI で確認する。
 
 `flake.lock` は毎週土曜に [update-locks](.github/workflows/update-locks.yaml) が PR を作って auto-merge する（[adr/agent-rules-nix/0001](adr/agent-rules-nix/0001-run-update-locks-in-this-repo.md)）。元の設計メモは [plan.md](plan.md)。
 
