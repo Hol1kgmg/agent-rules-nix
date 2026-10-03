@@ -1,0 +1,8 @@
+version: 2
+updates:
+  # .github/workflows/ 配下の全 workflow が対象。SHA pin と横の # vN コメントを更新する。
+  # flake.lock と registry/sources.lock.json は update-locks.yaml が見る
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly

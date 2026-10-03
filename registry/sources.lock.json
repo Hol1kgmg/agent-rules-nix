@@ -1,0 +1,168 @@
+{
+  "manifests": {
+    "anthropic": {
+      "filter": {
+        "maxDepth": null,
+        "nameRegex": null
+      },
+      "idPrefix": null,
+      "pin": {
+        "at": null,
+        "branch": "main",
+        "owner": "anthropics",
+        "preReleases": false,
+        "releasePrefix": null,
+        "repo": "skills",
+        "submodules": false,
+        "type": "github",
+        "versionUpperBound": null
+      },
+      "subdir": "skills"
+    },
+    "cognitive-rhythm-writing": {
+      "filter": {
+        "maxDepth": 0,
+        "nameRegex": null
+      },
+      "idPrefix": null,
+      "pin": {
+        "at": null,
+        "branch": "main",
+        "forge": "auto",
+        "preReleases": false,
+        "releasePrefix": null,
+        "submodules": false,
+        "type": "git",
+        "url": "https://gist.github.com/k16shikano/eb2929f13ed19c97188393d297be8432.git",
+        "versionUpperBound": null
+      },
+      "subdir": "."
+    },
+    "japanese-tech-writing": {
+      "filter": {
+        "maxDepth": 0,
+        "nameRegex": null
+      },
+      "idPrefix": null,
+      "pin": {
+        "at": null,
+        "branch": "main",
+        "forge": "auto",
+        "preReleases": false,
+        "releasePrefix": null,
+        "submodules": false,
+        "type": "git",
+        "url": "https://gist.github.com/k16shikano/fd287c3133457c4fd8f5601d34aa817d.git",
+        "versionUpperBound": null
+      },
+      "subdir": "."
+    },
+    "vercel": {
+      "filter": {
+        "maxDepth": null,
+        "nameRegex": null
+      },
+      "idPrefix": null,
+      "pin": {
+        "at": null,
+        "branch": "main",
+        "owner": "vercel",
+        "preReleases": false,
+        "releasePrefix": null,
+        "repo": "ai",
+        "submodules": false,
+        "type": "github",
+        "versionUpperBound": null
+      },
+      "subdir": "skills"
+    },
+    "web-quality": {
+      "filter": {
+        "maxDepth": null,
+        "nameRegex": null
+      },
+      "idPrefix": null,
+      "pin": {
+        "at": null,
+        "branch": "main",
+        "owner": "addyosmani",
+        "preReleases": false,
+        "releasePrefix": null,
+        "repo": "web-quality-skills",
+        "submodules": false,
+        "type": "github",
+        "versionUpperBound": null
+      },
+      "subdir": "skills"
+    }
+  },
+  "npins": {
+    "pins": {
+      "anthropic": {
+        "branch": "main",
+        "hash": "sha256-PRBkTEGNwT73EFCvuTprzIBGiG+UGSYiaCkY7Ji13us=",
+        "repository": {
+          "owner": "anthropics",
+          "repo": "skills",
+          "type": "GitHub"
+        },
+        "revision": "8a1541c4a3ffa5a20a5a91de0dcf3f0bab1d1ef4",
+        "submodules": false,
+        "type": "Git",
+        "url": "https://github.com/anthropics/skills/archive/8a1541c4a3ffa5a20a5a91de0dcf3f0bab1d1ef4.tar.gz"
+      },
+      "cognitive-rhythm-writing": {
+        "branch": "main",
+        "hash": "sha256-Zo3iVnTvVG6IfU9vBf4Zv/bEcKmNKnI2IY1D0uvzkNM=",
+        "repository": {
+          "type": "Git",
+          "url": "https://gist.github.com/k16shikano/eb2929f13ed19c97188393d297be8432.git"
+        },
+        "revision": "a3b1e26beced71d582e13314fb6f5b179b023c76",
+        "submodules": false,
+        "type": "Git",
+        "url": null
+      },
+      "japanese-tech-writing": {
+        "branch": "main",
+        "hash": "sha256-jo1DvsAVIAKzurutp+T66kctgaFEe+sVbY9bf7wlCLM=",
+        "repository": {
+          "type": "Git",
+          "url": "https://gist.github.com/k16shikano/fd287c3133457c4fd8f5601d34aa817d.git"
+        },
+        "revision": "8f2d57610a73efc97d743c9b0b0ecb1002e09fa4",
+        "submodules": false,
+        "type": "Git",
+        "url": null
+      },
+      "vercel": {
+        "branch": "main",
+        "hash": "sha256-keTOvGsaAaoRRIIsQkUVMUeTlFJDwDyPdWCUyAE3BTU=",
+        "repository": {
+          "owner": "vercel",
+          "repo": "ai",
+          "type": "GitHub"
+        },
+        "revision": "a470e0dee3cfa0df918cc3a41d54b69d146058f8",
+        "submodules": false,
+        "type": "Git",
+        "url": "https://github.com/vercel/ai/archive/a470e0dee3cfa0df918cc3a41d54b69d146058f8.tar.gz"
+      },
+      "web-quality": {
+        "branch": "main",
+        "hash": "sha256-RW+30OFUYxNO/SqPJ/bmwAn965GOoxjeuKBMFBtESHE=",
+        "repository": {
+          "owner": "addyosmani",
+          "repo": "web-quality-skills",
+          "type": "GitHub"
+        },
+        "revision": "afa8da942115f2961fdbfa80807ea0b232ff6c00",
+        "submodules": false,
+        "type": "Git",
+        "url": "https://github.com/addyosmani/web-quality-skills/archive/afa8da942115f2961fdbfa80807ea0b232ff6c00.tar.gz"
+      }
+    },
+    "version": 8
+  },
+  "schemaVersion": 1
+}

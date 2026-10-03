@@ -1,0 +1,50 @@
+name: update-locks
+
+on:
+  schedule:
+    - cron: "0 0 * * 6" # 毎週土曜 09:00 JST
+  workflow_dispatch:
+
+# 既定をゼロ権限にする。書き込みはすべて App トークンで行う
+permissions: {}
+
+jobs:
+  update:
+    # テンプレート生成で派生リポジトリにも降るが、そこでは lockfile を手動更新する（just update）。
+    # 削除や同期対象外の仕組みを持たせず、このガード1行で止める
+    if: github.repository == 'Hol1kgmg/claude-temp'
+    runs-on: ubuntu-latest
+    steps:
+      # App トークンで PR を作ると ci.yaml が起動する。
+      # GITHUB_TOKEN 製の PR では CI が発火せず、auto-merge が必須チェック待ちで止まる
+      - uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349 # v2
+        id: token
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - uses: DeterminateSystems/nix-installer-action@786fff0690178f1234e4e1fe9b536e94f5433196 # v20
+
+      - run: nix flake update
+      - run: nix run .#skills-sources-lock
+
+      - uses: peter-evans/create-pull-request@22a9089034f40e5a961c8808d113e2c98fb63676 # v7
+        id: pr
+        with:
+          token: ${{ steps.token.outputs.token }}
+          title: "chore: flake.lock / sources.lock.json を更新"
+          commit-message: "chore: flake.lock / sources.lock.json を更新"
+          branch: update-locks
+          delete-branch: true
+
+      # ブランチ保護を迂回しない。ci.yaml の nix flake check が通って初めてマージされる
+      - if: steps.pr.outputs.pull-request-number != ''
+        env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+          PR: ${{ steps.pr.outputs.pull-request-number }}
+        run: gh pr merge --squash --delete-branch --auto "$PR"

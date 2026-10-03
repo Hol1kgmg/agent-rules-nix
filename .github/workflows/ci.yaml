@@ -1,0 +1,22 @@
+name: ci
+
+on:
+  # main は PR を経由しない直接 push もあるため見る。
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# 検証はここで行う。書き込み権限を持たせない
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - uses: DeterminateSystems/nix-installer-action@786fff0690178f1234e4e1fe9b536e94f5433196 # v20
+      - run: nix flake check
