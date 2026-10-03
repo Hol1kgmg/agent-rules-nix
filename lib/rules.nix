@@ -14,7 +14,7 @@ let
         if builtins.pathExists root then readDir root
         else throw "agent-rules: source '${name}' path ${toString root} does not exist";
       mdFiles = builtins.filter
-        (f: entries.${f} == "regular" && match ".*\\.md" f != null)
+        (f: entries.${f} == "regular" && match ".*\\.md" f != null && lib.toLower f != "readme.md")
         (attrNames entries);
       prefix = cfg.idPrefix or null;
       regex = cfg.filter.nameRegex or null;

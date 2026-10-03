@@ -3,7 +3,7 @@
 他リポジトリの agent rules（`.claude/rules/*.md`）を manifest + lock で rev 固定し、devShell 起動時に同期する Nix ライブラリ。
 [agent-skills-nix](https://github.com/Kyure-A/agent-skills-nix) と同じ流儀で、skill 非依存の関数はそこから流用している（fork ではない）。
 
-- 1 ルール = source の `subdir` 直下にある `*.md` 1 ファイル。ID はファイル名から `.md` を除いたもの（`idPrefix` があれば `<prefix>/<name>`）。
+- 1 ルール = source の `subdir` 直下にある `*.md` 1 ファイル（`README.md` は除く）。ID はファイル名から `.md` を除いたもの（`idPrefix` があれば `<prefix>/<name>`）。
 - frontmatter（Claude Code の `paths:` など）は加工せずそのまま配る。
 
 ## 公開 API（`lib.agent-rules`）
