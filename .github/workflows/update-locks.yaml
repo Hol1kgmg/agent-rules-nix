@@ -10,9 +10,7 @@ permissions: {}
 
 jobs:
   update:
-    # ライブラリとして agent-skills-nix の API 変更に追従するため、このリポジトリでも動かす
-    # （adr/agent-rules-nix/0001）。App のインストールと Secrets は docs/lockfile-automation.md の手順
-    if: github.repository == 'Hol1kgmg/agent-rules-nix'
+    # なぜ App トークンなのかは adr/agent-rules-nix/0001
     runs-on: ubuntu-latest
     steps:
       # App トークンで PR を作ると ci.yaml が起動する。
@@ -31,14 +29,13 @@ jobs:
       - uses: DeterminateSystems/nix-installer-action@786fff0690178f1234e4e1fe9b536e94f5433196 # v20
 
       - run: nix flake update
-      - run: nix run .#skills-sources-lock
 
       - uses: peter-evans/create-pull-request@22a9089034f40e5a961c8808d113e2c98fb63676 # v7
         id: pr
         with:
           token: ${{ steps.token.outputs.token }}
-          title: "chore: flake.lock / sources.lock.json を更新"
-          commit-message: "chore: flake.lock / sources.lock.json を更新"
+          title: "chore: flake.lock を更新"
+          commit-message: "chore: flake.lock を更新"
           branch: update-locks
           delete-branch: true
 

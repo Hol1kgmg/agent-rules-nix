@@ -1,97 +1,55 @@
 {
+  description = "Declarative agent rules (.claude/rules/*.md) with manifest + lock pinned sources, built on agent-skills-nix";
+
   inputs = {
-    nixpkgs.url = "github:cachix/devenv-nixpkgs/rolling";
-    flake-utils.url = "github:numtide/flake-utils";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     agent-skills.url = "github:Kyure-A/agent-skills-nix";
-    nur-packages.url = "github:Hol1kgmg/nur-packages";
   };
 
-  outputs = { nixpkgs, flake-utils, agent-skills, nur-packages, ... }:
+  outputs = { nixpkgs, agent-skills, ... }:
     let
-      agentLib = agent-skills.lib.agent-skills;
+      inherit (nixpkgs) lib;
+      forAllSystems = lib.genAttrs lib.systems.flakeExposed;
 
-      # スキルの取得元は ./registry/sources、有効にする ID は ./skills.nix
-      sources = agentLib.sourcesFromLock {
-        manifestsDir = ./registry/sources;
-        lockFile = ./registry/sources.lock.json;
-      } // {
-        # 独自スキル。rev 固定が不要なため lock には載せない。
-        local = { path = ./skills; };
-      };
-      catalog = agentLib.discoverCatalog sources;
-      selection = agentLib.selectSkills {
-        inherit catalog sources;
-        allowlist = import ./skills.nix;
-      };
+      rulesLib = import ./lib { inherit lib; skillsLib = agent-skills.lib.agent-skills; };
 
-      localTargets = {
-        agents = agentLib.defaultLocalTargets.agents // { enable = true; };
-      };
-
-      # このリポジトリが提供するライブラリ。examples/rules で自分自身に dogfood する。
-      rulesLib = import ./lib { lib = nixpkgs.lib; skillsLib = agentLib; };
+      # examples/rules を自分自身の .claude/rules に同期して dogfood する
       ruleCatalog = rulesLib.discoverCatalog { local = { path = ./examples/rules; }; };
       ruleSelection = rulesLib.selectRules { catalog = ruleCatalog; allowlist = [ "sample" ]; };
       ruleTargets = { claude = rulesLib.defaultLocalTargets.claude // { enable = true; }; };
     in
     {
       lib.agent-rules = rulesLib;
-    } // flake-utils.lib.eachDefaultSystem (system:
-      let
-        pkgs = nixpkgs.legacyPackages.${system};
-        bundle = agentLib.mkBundle { inherit pkgs selection; };
-        rulesBundle = rulesLib.mkBundle { inherit pkgs; selection = ruleSelection; };
-      in {
-        # skills.nix の宣言が解決できてバンドルが組めるかの確認（nix flake check）
-        checks.skills = bundle;
-        checks.rules-example = rulesBundle;
 
-        apps.rules-install-local = {
-          type = "app";
-          program = "${rulesLib.mkLocalInstallProgram { inherit pkgs; bundle = rulesBundle; targets = ruleTargets; }}/bin/rules-install-local";
-        };
-
-        # sources から見つかった全スキル ID の一覧（skills.nix の候補）
-        apps.skills-list = {
-          type = "app";
-          program = "${pkgs.writeShellScriptBin "skills-list" ''
-            cat ${pkgs.writeText "skill-ids" (nixpkgs.lib.concatLines (builtins.attrNames catalog))}
-          ''}/bin/skills-list";
-        };
-
-        # registry/sources/*.nix を解決して sources.lock.json を更新する
-        apps.skills-sources-lock = {
-          type = "app";
-          program = "${agentLib.mkSourceLockProgram { inherit pkgs; }}/bin/skills-sources-lock";
-        };
-
-        apps.skills-install-local = {
-          type = "app";
-          program = "${agentLib.mkLocalInstallProgram { inherit pkgs bundle; targets = localTargets; }}/bin/skills-install-local";
-        };
-
-        devShells.default = pkgs.mkShell {
-          packages = [
-            pkgs.just
-            pkgs.gitleaks
-            pkgs.lefthook
-            pkgs.gh
-            pkgs.gh-dash
-            nur-packages.packages.${system}.markserv
-          ];
-
-          shellHook = ''
-            lefthook install >/dev/null
-          '' + agentLib.mkShellHook {
-            inherit pkgs bundle;
-            targets = localTargets;
-            quiet = true;
-          } + rulesLib.mkShellHook {
-            inherit pkgs;
-            bundle = rulesBundle;
-            targets = ruleTargets;
-            quiet = true;
-          };
-        };
+      checks = forAllSystems (system: {
+        rules-example = rulesLib.mkBundle { pkgs = nixpkgs.legacyPackages.${system}; selection = ruleSelection; };
       });
+
+      apps = forAllSystems (system:
+        let pkgs = nixpkgs.legacyPackages.${system}; in {
+          rules-install-local = {
+            type = "app";
+            program = "${rulesLib.mkLocalInstallProgram {
+              inherit pkgs;
+              bundle = rulesLib.mkBundle { inherit pkgs; selection = ruleSelection; };
+              targets = ruleTargets;
+            }}/bin/rules-install-local";
+          };
+        });
+
+      devShells = forAllSystems (system:
+        let pkgs = nixpkgs.legacyPackages.${system}; in {
+          default = pkgs.mkShell {
+            packages = [ pkgs.just pkgs.gitleaks pkgs.lefthook pkgs.gh ];
+            shellHook = ''
+              lefthook install >/dev/null
+            '' + rulesLib.mkShellHook {
+              inherit pkgs;
+              bundle = rulesLib.mkBundle { inherit pkgs; selection = ruleSelection; };
+              targets = ruleTargets;
+              quiet = true;
+            };
+          };
+        });
+    };
 }

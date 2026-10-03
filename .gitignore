@@ -1,5 +1,4 @@
 .direnv/
-.agents/skills/
 .claude/rules/
 .claude/settings.local.json
 

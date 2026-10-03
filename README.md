@@ -60,10 +60,10 @@ shellHook = ... + rulesLib.mkShellHook { inherit pkgs; bundle = rulesBundle; tar
 ```bash
 nix flake check   # examples/rules からバンドルが組めるか
 just rules        # examples/rules を .claude/rules に同期
-just update       # flake.lock / sources.lock.json を更新して検証
+just update       # flake.lock を更新して検証
 ```
 
-スキル（`skills.nix` → `.agents/skills`）とテンプレート同期（`just sync`）は [claude-temp](https://github.com/Hol1kgmg/claude-temp) 由来。設計判断は [adr/](adr/)、元の設計メモは [plan.md](plan.md)。
+`flake.lock` は毎週土曜に [update-locks](.github/workflows/update-locks.yaml) が PR を作って auto-merge する（[adr/agent-rules-nix/0001](adr/agent-rules-nix/0001-run-update-locks-in-this-repo.md)）。元の設計メモは [plan.md](plan.md)。
 
 ## スコープ外
 
